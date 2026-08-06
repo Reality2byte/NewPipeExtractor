@@ -841,7 +841,12 @@ public class YoutubeStreamExtractor extends StreamExtractor {
                             "This age-restricted video cannot be watched anonymously");
                 }
 
-                if (reason.contains("private")) {
+                if (playabilityStatus.getArray("messages")
+                        .stream()
+                        .filter(String.class::isInstance)
+                        .map(String.class::cast)
+                        .anyMatch(message -> !isNullOrEmpty(message)
+                                && message.contains("private"))) {
                     throw new PrivateContentException("This video is private");
                 }
 
